@@ -23,6 +23,7 @@ public class BlockController {
     @GetMapping("/getRecentBlocksByNameType")
     public List<BlockListDTO> getRecentBlocksByNameType(@RequestParam String name,
                     @RequestParam String type){
+        System.out.println("1111111");
         return null;
     }
     @GetMapping("/getBlockDetailByHash")
