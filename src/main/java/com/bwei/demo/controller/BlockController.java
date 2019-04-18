@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/block")
 public class BlockController {
-    @GetMapping("getRecentBlocksById")
+    @GetMapping("/getRecentBlocksById")
     public List<BlockListDTO> getRecentBlocksById(@RequestParam Integer blockchainId){
         return null;
     }
