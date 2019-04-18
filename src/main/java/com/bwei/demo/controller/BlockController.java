@@ -19,6 +19,7 @@ public class BlockController {
     public List<BlockListDTO> getRecentBlocksById(@RequestParam Integer blockchainId){
         return null;
     }
+
     @GetMapping("/getRecentBlocksByNameType")
     public List<BlockListDTO> getRecentBlocksByNameType(@RequestParam String name,
                     @RequestParam String type){
