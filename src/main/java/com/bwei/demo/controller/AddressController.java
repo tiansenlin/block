@@ -19,6 +19,7 @@ public class AddressController {
     public AddressInfo getAddressInfo(@RequestParam String address){
     return null;
 }
+
     @GetMapping("/getAddressTransactions")
     public List<TransactionInBlockDTO> getAddressTransactions(@RequestParam String address,
                                                               @RequestParam(required =false,defaultValue ="1")Integer pageNum){
