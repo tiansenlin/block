@@ -25,8 +25,15 @@ private MiscService miscService;
     @GetMapping("/importFromHeight")
     public void importFromHeight(@RequestParam Integer blockHeight,
                                  @RequestParam(required =false,defaultValue ="false")Boolean isClean){
-
+     miscService.importFromHeight(blockHeight,isClean);
     }
+
+    @GetMapping("importFromHash")
+    public void importFromHash(@RequestParam String blockhash,@RequestParam(required =false,defaultValue ="false")Boolean isClean){
+        miscService.importFromHash(blockhash,isClean);
+    }
+
+
     @GetMapping("/getImportState")
     public ImportStateDTO getImportState(){
         return null;

@@ -36,5 +36,9 @@ public class TempController {
         String blockHashByHeight = bitcoinJsonRpcClient.getBlockHashByHeight(1489445);
         String address = "mwt9LmdatUcksGQ8eEbKbbPnczUmTq4G9h";
         Double balanceAmount = bitcoinJsonRpcClient.getBalance(address);
+        String txid="";
+        Integer n=0;
+        JSONObject utxo=bitcoinApi.getUTXO(txid,n);
+        JSONObject rawTransaxtion = bitcoinJsonRpcClient.getRawTransaxtion(txid);
     }
 }
