@@ -8,4 +8,6 @@ import org.springframework.scheduling.annotation.Async;
 public interface MiscService {
     @Async
     void importFromHash(String blockHash, Boolean isClean);
+
+    void importFromHeight(Integer blockHeight, Boolean isClean);
 }
