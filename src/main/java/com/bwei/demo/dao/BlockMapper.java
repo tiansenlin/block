@@ -2,6 +2,8 @@ package com.bwei.demo.dao;
 
 import com.bwei.demo.po.Block;
 
+import java.util.List;
+
 public interface BlockMapper {
     int deleteByPrimaryKey(String blockhash);
 
@@ -16,4 +18,6 @@ public interface BlockMapper {
     int updateByPrimaryKey(Block record);
 
    int truncate();
+
+    List<Block> selectRecent();
 }

@@ -74,6 +74,7 @@ public class MiscServiceImpl implements MiscService{
             block.setNextBlockhash(blockOrigin.getString("nextblockhash"));
             block.setMerkleRoot(blockOrigin.getString("merkleroot"));
             blockMapper.insert(block);
+
            temphash=blockOrigin.getString("nextblockhash");
 
         }
@@ -97,12 +98,14 @@ public class MiscServiceImpl implements MiscService{
         JSONArray vins=tx.getJSONArray("vin");
         //todo vin0 coinbase tx
         for(int i=1;i<vins.size();i++){
-            importVinDetail(vouts.getJSONObject(i),txid);
+            //importVinDetail(vouts.getJSONObject(i),txid);
         }
     }
 
-    private void importVinDetail(JSONObject jsonObject, String txid) {
-    }
+
+
+//    private void importVinDetail(JSONObject jsonObject, String txid) {
+//    }
 
     public void importVoutDetail(JSONObject vout,String txid){
         TransactionDetail transactionDetail = new TransactionDetail();
