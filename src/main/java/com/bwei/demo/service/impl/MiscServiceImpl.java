@@ -25,7 +25,7 @@ import java.util.Date;
  */
 @Service
 public class MiscServiceImpl implements MiscService{
-    private Logger logger= LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private BitcoinApi bitcoinApi;
@@ -44,21 +44,23 @@ public class MiscServiceImpl implements MiscService{
 
     @Async
     @Override
-    public void importFromHeight(Integer blockHeight,Boolean isClean){
+    public void importFromHeight(Integer blockHeight, Boolean isClean) {
 
     }
 
     @Async
     @Override
-    public void importFromHash(String blockHash,Boolean isClean){
-        if(isClean){
-           blockMapper.truncate();
+    public void importFromHash(String blockHash, Boolean isClean) throws Throwable {
+        if (isClean){
+            //blockMapper.truncate();
             transactionMapper.truncate();
             transactionDetailMapper.truncate();
         }
-        String temphash=blockHash;
-        while(temphash!=null &&!temphash.isEmpty()){
-       JSONObject blockOrigin=bitcoinApi.getBlock(temphash);
+
+        String temphash = blockHash;
+
+        while (temphash != null && !temphash.isEmpty()){
+            JSONObject blockOrigin = bitcoinApi.getBlock(temphash);
             Block block = new Block();
             block.setBlockhash(blockOrigin.getString("hash"));
             block.setBlockchainId(2);
@@ -66,23 +68,30 @@ public class MiscServiceImpl implements MiscService{
             Long time = blockOrigin.getLong("time");
             Date date = new Date(time * 1000);
             block.setTime(date);
-            JSONArray tx = blockOrigin.getJSONArray("tx");
-            block.setTxSize(tx.size());
+            JSONArray txes = blockOrigin.getJSONArray("tx");
+            for (int i = 0; i < txes.size(); i++) {
+                importTx(txes.getJSONObject(i),temphash,date);
+            }
+            block.setTxSize(txes.size());
             block.setSizeOnDisk(blockOrigin.getLong("size"));
-            block.setDifficulty(blockOrigin.getDouble("diffculty"));
+            block.setDifficulty(blockOrigin.getDouble("difficulty"));
             block.setPrevBlockhash(blockOrigin.getString("previousblockhash"));
             block.setNextBlockhash(blockOrigin.getString("nextblockhash"));
             block.setMerkleRoot(blockOrigin.getString("merkleroot"));
             blockMapper.insert(block);
 
-           temphash=blockOrigin.getString("nextblockhash");
-
+            temphash = blockOrigin.getString("nextblockhash");
         }
-         logger.info("sync finished");
+
+        logger.info("sync finished");
+
     }
-    public void importTx(JSONObject tx,String blockhash,Date time){
+
+
+
+    public void importTx(JSONObject tx, String blockhash, Date time) throws Throwable {
         Transaction transaction = new Transaction();
-        String txid=tx.getString("txid");
+        String txid = tx.getString("txid");
         transaction.setTxid(txid);
         transaction.setTxhash(tx.getString("hash"));
         transaction.setBlockhash(blockhash);
@@ -91,26 +100,24 @@ public class MiscServiceImpl implements MiscService{
         transaction.setTime(time);
         transactionMapper.insert(transaction);
 
-        JSONArray vouts=tx.getJSONArray("vout");
-        for(int i=0;i<vouts.size();i++){
+        JSONArray vouts = tx.getJSONArray("vout");
+        for (int i = 0; i < vouts.size(); i++) {
             importVoutDetail(vouts.getJSONObject(i),txid);
         }
-        JSONArray vins=tx.getJSONArray("vin");
+
+        JSONArray vins = tx.getJSONArray("vin");
+
         //todo vin0 coinbase tx
-        for(int i=1;i<vins.size();i++){
-            //importVinDetail(vouts.getJSONObject(i),txid);
+
+        for (int i = 1; i < vins.size(); i++) {
+            importVinDetail(vins.getJSONObject(i),txid);
         }
     }
 
-
-
-//    private void importVinDetail(JSONObject jsonObject, String txid) {
-//    }
-
-    public void importVoutDetail(JSONObject vout,String txid){
+    public void importVoutDetail(JSONObject vout, String txid){
         TransactionDetail transactionDetail = new TransactionDetail();
         transactionDetail.setTxid(txid);
-        JSONObject scriptPubKey=vout.getJSONObject("scriptPubKey");
+        JSONObject scriptPubKey = vout.getJSONObject("scriptPubKey");
         JSONArray addresses = scriptPubKey.getJSONArray("addresses");
         //todo check whether sync addresses
         if (addresses != null && !addresses.isEmpty()){
@@ -124,8 +131,6 @@ public class MiscServiceImpl implements MiscService{
         transactionDetailMapper.insert(transactionDetail);
 
     }
-
-
 
     public void importVinDetail(JSONObject vin, String txidOrigin) throws Throwable {
         String txid = vin.getString("txid");
@@ -142,11 +147,11 @@ public class MiscServiceImpl implements MiscService{
         transactionDetail.setAmount(amount);
         JSONObject scriptPubKey = jsonObject.getJSONObject("scriptPubKey");
         JSONArray addresses = scriptPubKey.getJSONArray("addresses");
-        if (addresses != null) {
+        if (addresses != null){
             String address = addresses.getString(0);
             transactionDetail.setAddress(address);
         }
+
         transactionDetailMapper.insert(transactionDetail);
     }
-
 }

@@ -33,8 +33,9 @@ public class BlockController {
     @Autowired
     private BlockMapper blockMapper;
 
-    @Value("${blockchain.recentCount}")
-    private Integer recentCount;
+   // @Value("${blockchain.recentCount}")
+
+    //private Integer recentCount;
 
     @GetMapping("/getRecentBlocks")
     public List<BlockListDTO> getRecentBlocks() throws Throwable {
@@ -74,7 +75,7 @@ public class BlockController {
 //            //todo add size on disk
 //            blockListDTO.setTxSize(block.getInteger("nTx"));
 //            blockListDTOS.add(blockListDTO);
- //       }
+//        }
 
         List<Block> blocks = blockMapper.selectRecent();
         List<BlockListDTO> blockListDTOS = blocks.stream().map(block -> {

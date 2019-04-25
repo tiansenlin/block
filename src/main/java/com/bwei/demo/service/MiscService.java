@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Async;
  */
 public interface MiscService {
     @Async
-    void importFromHash(String blockHash, Boolean isClean);
+    void importFromHash(String blockHash, Boolean isClean) throws Throwable;
 
     void importFromHeight(Integer blockHeight, Boolean isClean);
 }

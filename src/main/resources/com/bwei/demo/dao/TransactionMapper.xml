@@ -138,4 +138,10 @@
       fees = #{fees,jdbcType=DOUBLE}
     where txid = #{txid,jdbcType=CHAR}
   </update>
+
+
+  <!--&lt;!&ndash;custom sql&ndash;&gt;-->
+  <!--<update id="truncate">-->
+    <!--truncate table `transaction`;-->
+  <!--</update>-->
 </mapper>
